@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+
+    <script>
+        //var gui = require('nw.gui');
+        var win = nw.Window.get();
+    </script>
+
+</head>
+<body>
+
+<div id="menu" class="menu--closed">
+    <div class="menu-heading">SETTINGS</div>
+
+    <form>
+
+        <div class="group">
+            <input type="text" id="timeout-value" value="6" required>
+            <span class="highlight"></span>
+            <span class="bar"></span>
+            <label>Time</label>
+        </div>
+
+        <div id="button-save">SAVE</div>
+
+
+    </form>
+
+</div>
+
+<div id="overlay" class="overlay--transparent">&nbsp;</div>
+
+<div id="time-progress">&nbsp;</div>
+
+<div class="toolbar">
+    <div id="button-settings">&nbsp;</div>
+    <div id="button-close" class="window-button">X</div>
+    <div id="button-minimize" class="window-button">—</div>
+</div>
+
+<div class="main">
+    &nbsp;
+    <div class="arrow-container">
+        <div class="arrow">&nbsp;</div>
+    </div>
+</div>
+
+<script>
+
+    var arrow = $('.arrow');
+    var timer = $('#time-progress');
+    var interval, arrowRotateTime, setIntervalObject;
+
+    function init() {
+        clearInterval(setIntervalObject);
+        restoreTimer();
+        interval = $("#timeout-value").val()*1000;
+        arrowRotateTime = 2000;
+        rotateArrow();
+        setIntervalObject = setInterval(rotateArrow, interval + arrowRotateTime);
+    }
+
+    init();
+
+    $('#button-minimize').click(function () {
+        win.minimize();
+    });
+
+    $('#button-close').click(function () {
+        win.close();
+    });
+
+    $('#button-settings').click(function () {
+        $('#menu').toggleClass('menu--opened menu--closed');
+        $('#overlay').toggleClass('overlay--transparent overlay--dark')
+    });
+
+    $('#button-save').click(init);
+
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function rotateArrow() {
+        restoreTimer();
+        var angle = getRandomInt(0, 16) * 22.5 - 12;
+        arrow.css('transform', 'rotate(' + angle + 'deg)');
+        setTimeout(timerCountdownStart, arrowRotateTime);
+    }
+
+    function timerCountdownStart() {
+        timer.animate({
+                    width: 0
+                }
+                , interval)
+    }
+
+    function restoreTimer() {
+        timer.animate({
+                    width: "100%"
+                }
+                , 300)
+    }
+
+
+    //setInterval(rotateArrow, interval + arrowRotateTime);
+    //console.log('started');
+
+
+</script>
+
+</body>
+</html>
